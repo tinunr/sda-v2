@@ -1,83 +1,167 @@
 <?php
 
-/** @var yii\web\View $this */
-/** @var string $content */
+/* @var $this \yii\web\View */
+/* @var $content string */
 
+use yii\helpers\Html;
+use yii\helpers\url;
+use yii\bootstrap\Nav;
+use yii\bootstrap\NavBar;
+use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
-use app\widgets\Alert;
-use yii\bootstrap5\Breadcrumbs;
-use yii\bootstrap5\Html;
-use yii\bootstrap5\Nav;
-use yii\bootstrap5\NavBar;
-
-AppAsset::register($this);
-
-$this->registerCsrfMetaTags();
-$this->registerMetaTag(['charset' => Yii::$app->charset], 'charset');
-$this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, shrink-to-fit=no']);
-$this->registerMetaTag(['name' => 'description', 'content' => $this->params['meta_description'] ?? '']);
-$this->registerMetaTag(['name' => 'keywords', 'content' => $this->params['meta_keywords'] ?? '']);
-$this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii::getAlias('@web/favicon.ico')]);
+use yii2mod\alert\Alert;
+use app\components\helpers\MenuHelper;
+$appModulId = ($this->context->module->id=='app')?'':'/'.$this->context->module->id;
+AppAsset::register($this);  
+$this->beginPage() 
 ?>
-<?php $this->beginPage() ?>
 <!DOCTYPE html>
-<html lang="<?= Yii::$app->language ?>" class="h-100">
+<html lang="<?= Yii::$app->language ?>">
+
 <head>
-    <title><?= Html::encode($this->title) ?></title>
+    <meta charset="<?= Yii::$app->charset ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="<?=Url::to('@web/favicon.ico')?>" rel="icon" type="image">
+
+    <?= Html::csrfMetaTags() ?>
+    <title><?='MC DESP / '.strtoupper(Yii::$app->controller->module->id).' / '.Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
-<body class="d-flex flex-column h-100">
-<?php $this->beginBody() ?>
 
-<header id="header">
-    <?php
+<body>
+    <?php $this->beginBody() ?>
+
+    <div class="wrap">
+        <?php
     NavBar::begin([
-        'brandLabel' => Yii::$app->name,
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => ['class' => 'navbar-expand-md navbar-dark bg-dark fixed-top']
+        'brandLabel' => '<img class="logo" src="'.Url::to('@web/logo.png').'" alt="logotipo unicv final" width="647" height="321" style="text-decoration: none;">',
+        'brandUrl' =>'javascript:void(0)',
+        'options' => [
+            'class' => 'navbar-inverse navbar-fixed-top',
+            'onclick'=>'w3_open()',
+        ],
+        'renderInnerContainer' =>false,
+
     ]);
+
     echo Nav::widget([
-        'options' => ['class' => 'navbar-nav'],
+        'encodeLabels' => false,  
+        'options' => ['class' => 'navbar-nav navbar-left'],
         'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'About', 'url' => ['/site/about']],
-            ['label' => 'Contact', 'url' => ['/site/contact']],
-            Yii::$app->user->isGuest
-                ? ['label' => 'Login', 'url' => ['/site/login']]
-                : '<li class="nav-item">'
-                    . Html::beginForm(['/site/logout'])
-                    . Html::submitButton(
-                        'Logout (' . Yii::$app->user->identity->username . ')',
-                        ['class' => 'nav-link btn btn-link logout']
-                    )
-                    . Html::endForm()
-                    . '</li>'
-        ]
+            
+            ['label' => '<i class="fa fa-home" ></i> / '.$this->context->module->id, 'url' => [$appModulId.'/default/index']],
+            
+
+        ],
     ]);
-    NavBar::end();
+
+
+  
+    echo Nav::widget([
+        'encodeLabels' => false,  
+        'options' => ['class' => 'navbar-nav navbar-right'],
+        'items' => [
+            [
+                'label' => Html::img('@web/img/suport.png',['alt'=>'Suporte Tecnico']), 
+                'url' =>'https://t.me/tinunr',
+                'linkOptions' => ['target'=>'_blank'],
+            ],
+            [
+                'label' => '<i class="fas  fa-plus-circle fa-2x"></i>', 
+                'items' => MenuHelper::setAcessoRapido($this->context->module->id),
+            ],
+            [
+                'label' => '<i class="fas  fa-th-large fa-2x"></i>', 'items' => [
+                    ['label' => '<i class="fa  fa-tasks"></i> Operacional', 'url' => ['/dsp/default/index']],
+                    ['label' => '<i class="fa  fa-search-dollar"></i> Financeiro', 'url' => ['/fin/default/index']],
+                    ['label' => '<i class="fa  fa-copyright"></i> Contabilidade', 'url' => ['/cnt/default/index']],
+                    ['label' => '<i class="fa  fa-cog"></i> Adminstrator', 'url' => ['/default/index']],
+                ],
+            ],
+            
+            
+            [
+                'label' => '<i class="fas  fa-cloud-upload-alt fa-2x"></i>',
+                'url' => ['/file-browser/index'],
+                'linkOptions' => ['target' => '_blank']
+            ],
+            
+
+                ['label' => '<i class="fas  fa-user-circle fa-2x"></i>', 
+                'items' => [
+                    ['label' => '<i class="fa  fa-user-circle"></i> '.Yii::$app->user->identity->name],
+                    ['label' => '<i class="fa  fa-envelope"></i> '.Yii::$app->user->identity->username],
+                    '<li role="separator" class="divider"></li>',
+                    ['label' => '<i class="fa  fa-lock"></i> Alterar Password', 'url' => ['/user/chang-password']],
+                    [
+                        'label' => '<i class="fas  fa-sign-out-alt"></i> Encerrar Sessão',
+                        'url' => ['/site/logout'],
+                        'linkOptions' => ['data-method' => 'post']
+                    ],
+                ],
+            ],
+        ],
+    ]);
     ?>
-</header>
 
-<main id="main" class="flex-shrink-0" role="main">
-    <div class="container">
-        <?php if (!empty($this->params['breadcrumbs'])): ?>
-            <?= Breadcrumbs::widget(['links' => $this->params['breadcrumbs']]) ?>
-        <?php endif ?>
-        <?= Alert::widget() ?>
-        <?= $content ?>
-    </div>
-</main>
 
-<footer id="footer" class="mt-auto py-3 bg-light">
-    <div class="container">
-        <div class="row text-muted">
-            <div class="col-md-6 text-center text-md-start">&copy; My Company <?= date('Y') ?></div>
-            <div class="col-md-6 text-center text-md-end"><?= Yii::powered() ?></div>
+        <?php NavBar::end();
+    ?>
+        <nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+            <?=$this->render('menu/_'.$this->context->module->id); ?>
+
+        </nav>
+
+
+
+
+        <div class="w3-main" style="margin-left:250px">
+            <div class="content">
+                <?= Breadcrumbs::widget([
+                        'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+                    ]) 
+                ?>
+                <?= Alert::widget() ?>
+                <?= $content ?>
+            </div>
+
+
+
+
+
         </div>
-    </div>
-</footer>
 
-<?php $this->endBody() ?>
+        <?php $this->endBody() ?>
 </body>
+
 </html>
 <?php $this->endPage() ?>
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+    if (mySidebar.style.display === 'block') {
+        mySidebar.style.display = 'none';
+        overlayBg.style.display = "none";
+    } else {
+        mySidebar.style.display = 'block';
+        overlayBg.style.display = "block";
+    }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+    if (mySidebar.style.display === 'block') {
+        mySidebar.style.display = 'none';
+        overlayBg.style.display = "none";
+    } else {
+        mySidebar.style.display = 'block';
+        overlayBg.style.display = "block";
+    }
+}
+</script>

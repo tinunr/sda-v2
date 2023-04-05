@@ -1,0 +1,28 @@
+<anexo_cli xsi:noNamespaceSchemaLocation="https://nosiapps.gov.cv/grexsd/2014/mod106 anexo_cli.xsd">
+<header ano="2018" mes="12" cd_af="223" nif="259077275"/>
+<linhas>
+  <?php foreach($dataProvider->getModels() as $model):
+  $origem = Yii::$app->CntQuery->origemData($model['cnt_razao_id'])?>
+
+  <linha 
+  origem="<?=$origem->origem?>" 
+  nif="<?=$origem->origem?>" 
+  designacao="<?=$origem->origem?>" 
+  serie="<?=$origem->origem?>" 
+  tp_doc="<?=$origem->origem?>" 
+  num_doc="<?=$origem->origem?>" 
+  data="<?=$origem->origem?>" 
+  vl_fatura="<?=$origem->origem?>" 
+  vl_base_incid="<?=$origem->origem?>" 
+  tx_iva="<?=$origem->origem?>" 
+  iva_liq="<?=$origem->origem?>" 
+  nao_liq_imp="<?=$origem->origem?>" 
+  linha_dest_mod="<?=$origem->origem?>"/>
+<?php endforeach;?>
+
+</linhas>
+<dt_entrega>2019-01-07</dt_entrega>
+<total_fatura>229177106</total_fatura>
+<total_base_incid>4600788</total_base_incid>
+<total_liquidado>650968</total_liquidado>
+</anexo_cli>

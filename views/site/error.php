@@ -1,9 +1,9 @@
 <?php
 
-/** @var yii\web\View $this */
-/** @var string $name */
-/** @var string $message */
-/** @var Exception$exception */
+/* @var $this yii\web\View */
+/* @var $name string */
+/* @var $message string */
+/* @var $exception Exception */
 
 use yii\helpers\Html;
 
@@ -18,10 +18,10 @@ $this->title = $name;
     </div>
 
     <p>
-        The above error occurred while the Web server was processing your request.
+        O erro acima ocorreu enquanto o servidor da Web estava processando sua solicitação.
     </p>
     <p>
-        Please contact us if you think this is a server error. Thank you.
+        Entre em contato com o administrador se achar que isso é um erro do servidor. Obrigado.
     </p>
 
 </div>

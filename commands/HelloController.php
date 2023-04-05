@@ -7,8 +7,11 @@
 
 namespace app\commands;
 
+
 use yii\console\Controller;
-use yii\console\ExitCode;
+
+
+
 
 /**
  * This command echoes the first argument that you have entered.
@@ -23,12 +26,18 @@ class HelloController extends Controller
     /**
      * This command echoes what you have entered as the message.
      * @param string $message the message to be echoed.
-     * @return int Exit code
      */
-    public function actionIndex($message = 'hello world')
+    public function actionIndex($bas_ano_id)
     {
-        echo $message . "\n";
+        //comand ./yii hello/index
+        $ddd = \app\modules\dsp\models\Processo::find()->all();
+        foreach($ddd as $key => $dd){
+        echo $key.' Init processo numero '.$dd->numero.'/'.$dd->bas_ano_id.PHP_EOL;
+        // \app\modules\dsp\services\ProcessoService::setStatusOperacional($dd->id,$dd->status);
+        \app\modules\dsp\services\ProcessoService::setStatusFinanceiro($dd->id);
+        echo $key.' Done processo numero '.$dd->numero.'/'.$dd->bas_ano_id. PHP_EOL;
 
-        return ExitCode::OK;
+        }
+        echo 'All Done.';
     }
 }

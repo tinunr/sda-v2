@@ -61,7 +61,12 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $modules = \app\models\Module::find()->where(['status' => 1])->orderby('posicao')->all();
+        $bing = new \app\components\helpers\BingPhoto();
+        $bing->getImage();
+        return $this->render('index', [
+            'modules' => $modules
+        ]);
     }
 
     /**
